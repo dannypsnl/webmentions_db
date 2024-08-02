@@ -1,0 +1,3 @@
+WebmentionsDb.start([], [])
+
+Gen.run()
