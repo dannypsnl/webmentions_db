@@ -1,21 +1,33 @@
 # WebmentionsDb
 
-**TODO: Add description**
+A local cache management system for [webmentions](https://webmention.net/), it daily
 
-## Installation
+- fetch new mentions from https://webmention.io/
+- produce mentions tree for each mentioned target (a URL that usually is your site post).
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `webmentions_db` to your list of dependencies in `mix.exs`:
+## Setup
 
-```elixir
-def deps do
-  [
-    {:webmentions_db, "~> 0.1.0"}
-  ]
-end
+```sh
+git clone https://github.com/dannypsnl/webmentions_db.git
+# run database up
+docker compose up -d
 ```
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at <https://hexdocs.pm/webmentions_db>.
+The environment variables you need are
 
+```sh
+export DOMAIN=<your site url without scheme>
+export TOKEN=<webmention.io token>
+```
+
+Then run `mix run script/init.exs` to setup your local database. Since this system can daily update, so it's up to you to run it at background, or use scripts below manually
+
+```sh
+mix run script/update.exs
+mix run script/generate.exs
+```
+
+## Concept
+
+1. A mention is a link that talk about a (target) URL of your site.
+2. A mentioned target is a URL under your site.
