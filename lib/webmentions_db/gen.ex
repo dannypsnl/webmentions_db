@@ -1,4 +1,4 @@
-defmodule Gen do
+defmodule WebmentionsDb.Gen do
   alias WebmentionsDb.Repo
   alias Ecto.Multi
 

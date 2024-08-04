@@ -1,4 +1,4 @@
-defmodule Update do
+defmodule WebmentionsDb.Update do
   import Ecto.Query
 
   @doc """

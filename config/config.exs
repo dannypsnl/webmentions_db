@@ -13,8 +13,8 @@ config :webmentions_db, WebmentionsDb.Scheduler,
   jobs: [
     {"@daily",
      fn ->
-       Update.run()
-       Gen.run()
+       WebmentionsDb.Update.run()
+       WebmentionsDb.Gen.run()
      end}
   ]
 

@@ -1,4 +1,4 @@
 WebmentionsDb.start([], [])
 
-Update.run()
+WebmentionsDb.Update.run()
 |> IO.inspect()
