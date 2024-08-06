@@ -7,31 +7,50 @@ defmodule WebmentionsDb.Gen do
   """
   def run() do
     Target.list_all()
-    |> Enum.reduce(Multi.new(), fn target, multi ->
-      %{mentions: mentions, latest_mention: latest_mention} = target
+    |> Enum.map(&Task.async(fn -> task(&1) end))
+    |> Enum.map(&Task.await/1)
+    |> Enum.reduce(Multi.new(), fn changeset, multi ->
+      case changeset do
+        nil ->
+          multi
 
-      [m | _] = mentions
-      new_latest_mention = m.wm_received
-
-      run_generate? =
-        case latest_mention do
-          nil ->
-            true
-
-          _ ->
-            DateTime.compare(latest_mention, new_latest_mention) == :lt
-        end
-
-      if run_generate? do
-        generate(target)
-
-        multi
-        |> Multi.update(:targets, Target.changeset(target, %{latest_mention: new_latest_mention}))
-      else
-        multi
+        _ ->
+          multi
+          |> Multi.update(:targets, changeset)
       end
     end)
     |> Repo.transaction()
+  end
+
+  defp task(target) do
+    %{mentions: mentions, latest_mention: latest_mention} = target
+
+    [m | _] = mentions
+    new_latest_mention = m.wm_received
+
+    run_generate? =
+      case latest_mention do
+        nil ->
+          true
+
+        _ ->
+          DateTime.compare(latest_mention, new_latest_mention) == :lt
+      end
+
+    if run_generate? do
+      try do
+        generate(target)
+        Target.changeset(target, %{latest_mention: new_latest_mention})
+      rescue
+        reason ->
+          %{url: url} = target
+          IO.puts("failed to generate file for target #{url}")
+          IO.inspect(reason)
+          nil
+      end
+    else
+      nil
+    end
   end
 
   def mention_author(url, profile_photo) do
