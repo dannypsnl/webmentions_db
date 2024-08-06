@@ -59,6 +59,7 @@ defmodule WebmentionsDb.Gen do
 
   defp generate(%{output_file: output, mentions: mentions}) do
     output_dir = Application.fetch_env!(:webmentions_db, :output_dir)
+    File.mkdir_p!(output_dir)
     file = File.open!("#{output_dir}/#{output}", [:write, :utf8])
 
     IO.write(file, "\\xmlns:html{http://www.w3.org/1999/xhtml}\n")
