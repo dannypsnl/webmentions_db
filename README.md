@@ -29,6 +29,20 @@ mix run script/update.exs
 mix run script/generate.exs
 ```
 
+## Usage
+
+I use this repository as a submodule of my blog, and add the generated `webmentions_db/trees/` into my forester configuration, structure as below
+
+```
+site/
+  webmentions_db/
+    trees/
+      webmention-macros.tree
+      *.tree
+  site-trees/
+    *.tree
+```
+
 ## Concept
 
 1. A mention is a link that talk about a (target) URL of your site.
