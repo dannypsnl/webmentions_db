@@ -11,11 +11,7 @@ config :webmentions_db, WebmentionsDb.Repo,
 
 config :webmentions_db, WebmentionsDb.Scheduler,
   jobs: [
-    {"@daily",
-     fn ->
-       WebmentionsDb.Update.run()
-       WebmentionsDb.Gen.run()
-     end}
+    {"@daily", {WebmentionsDb.DailyJob, :run, []}}
   ]
 
 config :webmentions_db,
