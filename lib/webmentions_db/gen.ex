@@ -28,16 +28,22 @@ defmodule WebmentionsDb.Gen do
     [m | _] = mentions
     new_latest_mention = m.wm_received
 
-    run_generate? =
-      case latest_mention do
-        nil ->
-          true
+    new_latest_mention =
+      cond do
+        latest_mention == nil ->
+          new_latest_mention
 
-        _ ->
-          DateTime.compare(latest_mention, new_latest_mention) == :lt
+        DateTime.compare(latest_mention, new_latest_mention) == :lt ->
+          new_latest_mention
+
+        force? ->
+          latest_mention
+
+        true ->
+          nil
       end
 
-    if run_generate? || force? do
+    if new_latest_mention != nil do
       try do
         generate(target)
         Target.changeset(target, %{latest_mention: new_latest_mention})
