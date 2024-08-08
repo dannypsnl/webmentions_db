@@ -5,9 +5,9 @@ defmodule WebmentionsDb.Gen do
   @doc """
   The function iterate all targets and generate output files for them
   """
-  def run() do
+  def run(force? \\ false) do
     Target.list_all()
-    |> Enum.map(&Task.async(fn -> task(&1) end))
+    |> Enum.map(&Task.async(fn -> task(&1, force?) end))
     |> Enum.map(&Task.await/1)
     |> Enum.reduce(Multi.new(), fn changeset, multi ->
       case changeset do
@@ -22,7 +22,7 @@ defmodule WebmentionsDb.Gen do
     |> Repo.transaction()
   end
 
-  defp task(target) do
+  defp task(target, force?) do
     %{mentions: mentions, latest_mention: latest_mention} = target
 
     [m | _] = mentions
@@ -37,7 +37,7 @@ defmodule WebmentionsDb.Gen do
           DateTime.compare(latest_mention, new_latest_mention) == :lt
       end
 
-    if run_generate? do
+    if run_generate? || force? do
       try do
         generate(target)
         Target.changeset(target, %{latest_mention: new_latest_mention})
