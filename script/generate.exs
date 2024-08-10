@@ -1,3 +1,3 @@
 WebmentionsDb.start([], [])
 
-WebmentionsDb.Gen.run()
+WebmentionsDb.Generate.run()

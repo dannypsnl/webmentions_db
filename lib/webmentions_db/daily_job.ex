@@ -7,7 +7,7 @@ defmodule WebmentionsDb.DailyJob do
 
   def handle_cast(:run, _, state) do
     WebmentionsDb.Update.run()
-    WebmentionsDb.Gen.run()
+    WebmentionsDb.Generate.run()
     {:noreply, state}
   end
 end
