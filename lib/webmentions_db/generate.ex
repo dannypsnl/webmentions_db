@@ -64,6 +64,8 @@ defmodule WebmentionsDb.Generate do
   end
 
   defp generate(%{output_file: output, mentions: mentions}) do
+    {repost_list, like_list, reply_list} = WebmentionsDb.GenerateMap.generate_lists(mentions)
+
     output_dir = Application.fetch_env!(:webmentions_db, :output_dir)
     File.mkdir_p!(output_dir)
     file = File.open!("#{output_dir}/#{output}", [:write, :utf8])
@@ -71,15 +73,12 @@ defmodule WebmentionsDb.Generate do
     IO.write(file, "\\xmlns:html{http://www.w3.org/1999/xhtml}\n")
     IO.write(file, "\\taxon{reaction}\n")
     IO.write(file, "\\import{webmention-macros}\n\n")
+
     IO.write(file, "\\boost\n")
 
-    mentions
-    |> Enum.filter(fn m -> m.wm_property == :repost end)
+    repost_list
     |> IO.inspect()
-    |> Enum.map(fn m ->
-      url = m.url
-      profile_photo = Mention.get_author_photo(m)
-
+    |> Enum.map(fn %{url: url, profile_photo: profile_photo} ->
       IO.write(
         file,
         "  #{mention_author(url, profile_photo)}\n"
@@ -88,13 +87,9 @@ defmodule WebmentionsDb.Generate do
 
     IO.write(file, "\\like\n")
 
-    mentions
-    |> Enum.filter(fn m -> m.wm_property == :like end)
+    like_list
     |> IO.inspect()
-    |> Enum.map(fn m ->
-      url = m.url
-      profile_photo = Mention.get_author_photo(m)
-
+    |> Enum.map(fn %{url: url, profile_photo: profile_photo} ->
       IO.write(
         file,
         "  #{mention_author(url, profile_photo)}\n"
@@ -103,14 +98,9 @@ defmodule WebmentionsDb.Generate do
 
     IO.write(file, "\\ul{\n")
 
-    mentions
-    |> Enum.filter(fn m -> m.wm_property == :reply end)
+    reply_list
     |> IO.inspect()
-    |> Enum.map(fn m ->
-      url = m.url
-      profile_photo = Mention.get_author_photo(m)
-      content = m.content
-
+    |> Enum.map(fn %{url: url, profile_photo: profile_photo, content: content} ->
       IO.write(
         file,
         "  \\li{#{mention_author(url, profile_photo)} #{content}}\n"
