@@ -45,7 +45,11 @@ defmodule WebmentionsDb.Generate do
 
     if new_latest_mention != nil do
       try do
-        generate(target)
+        case Application.fetch_env!(:webmentions_db, :generate_kind) do
+          :tree -> generate_tree(target)
+          :json -> generate_json(target)
+        end
+
         Target.changeset(target, %{latest_mention: new_latest_mention})
       rescue
         reason ->
@@ -63,7 +67,24 @@ defmodule WebmentionsDb.Generate do
     "\\mention-author{#{url}}{#{profile_photo}}"
   end
 
-  defp generate(%{output_file: output, mentions: mentions}) do
+  defp generate_json(%{output_file: output, mentions: mentions}) do
+    {repost_list, like_list, reply_list} = WebmentionsDb.GenerateMap.generate_lists(mentions)
+
+    output_dir = Application.fetch_env!(:webmentions_db, :output_dir)
+    File.mkdir_p!(output_dir)
+    file = File.open!("#{output_dir}/#{output}", [:write, :utf8])
+
+    IO.write(
+      file,
+      Jason.encode!(%{
+        repost: repost_list,
+        like: like_list,
+        reply: reply_list
+      })
+    )
+  end
+
+  defp generate_tree(%{output_file: output, mentions: mentions}) do
     {repost_list, like_list, reply_list} = WebmentionsDb.GenerateMap.generate_lists(mentions)
 
     output_dir = Application.fetch_env!(:webmentions_db, :output_dir)

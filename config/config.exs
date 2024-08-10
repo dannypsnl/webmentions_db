@@ -17,6 +17,7 @@ config :webmentions_db, WebmentionsDb.Scheduler,
 config :webmentions_db,
   domain: System.get_env("DOMAIN"),
   token: System.get_env("TOKEN"),
+  generate_kind: :tree,
   output_dir: "trees",
   prefix: "mention-",
   extension: "tree"
