@@ -43,6 +43,19 @@ site/
     *.tree
 ```
 
+### generate JSON instead
+
+If you want to generate JSON file rather than `.tree`, then modify the `config/config.exs`
+
+```elixir
+config :webmentions_db,
+  # ...
+  generate_kind: :json,
+  output_dir: "output",
+  # ...
+  extension: "json"
+```
+
 ## Concept
 
 1. A mention is a link that talk about a (target) URL of your site.
