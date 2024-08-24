@@ -1,4 +1,4 @@
-{ lib, beamPackages, overrides ? (x: y: {}) }:
+{ lib, beamPackages, overrides ? (x: y: { }) }:
 
 let
   buildRebar3 = lib.makeOverridable beamPackages.buildRebar3;
@@ -18,7 +18,7 @@ let
         sha256 = "ee68d85df22e554040cdb4be100f33873ac6051387baf6a8f6ce82272340ff1c";
       };
 
-      beamDeps = [];
+      beamDeps = [ ];
     };
 
     crontab = buildMix rec {
@@ -57,7 +57,7 @@ let
         sha256 = "53cfe5f497ed0e7771ae1a475575603d77425099ba5faef9394932b35020ffcc";
       };
 
-      beamDeps = [];
+      beamDeps = [ ];
     };
 
     ecto = buildMix rec {
@@ -96,7 +96,7 @@ let
         sha256 = "83e8be657fa05b992ffa6ac1e3af6d57aa50aace8f691fcf696ff02f8335b001";
       };
 
-      beamDeps = [];
+      beamDeps = [ ];
     };
 
     hackney = buildRebar3 rec {
@@ -161,7 +161,7 @@ let
         sha256 = "69b09adddc4f74a40716ae54d140f93beb0fb8978d8636eaded0c31b6f099f16";
       };
 
-      beamDeps = [];
+      beamDeps = [ ];
     };
 
     mimerl = buildRebar3 rec {
@@ -174,7 +174,7 @@ let
         sha256 = "a1e15a50d1887217de95f0b9b0793e32853f7c258a5cd227650889b38839fe9d";
       };
 
-      beamDeps = [];
+      beamDeps = [ ];
     };
 
     parse_trans = buildRebar3 rec {
@@ -187,7 +187,7 @@ let
         sha256 = "620a406ce75dada827b82e453c19cf06776be266f5a67cff34e1ef2cbb60e49a";
       };
 
-      beamDeps = [];
+      beamDeps = [ ];
     };
 
     postgrex = buildMix rec {
@@ -226,7 +226,7 @@ let
         sha256 = "fe4c190e8f37401d30167c8c405eda19469f34577987c76dde613e838bbc67f8";
       };
 
-      beamDeps = [];
+      beamDeps = [ ];
     };
 
     telemetry = buildRebar3 rec {
@@ -239,7 +239,7 @@ let
         sha256 = "dad9ce9d8effc621708f99eac538ef1cbe05d6a874dd741de2e689c47feafed5";
       };
 
-      beamDeps = [];
+      beamDeps = [ ];
     };
 
     telemetry_registry = buildMix rec {
@@ -265,8 +265,9 @@ let
         sha256 = "25eee6d67df61960cf6a794239566599b09e17e668d3700247bc498638152521";
       };
 
-      beamDeps = [];
+      beamDeps = [ ];
     };
   };
-in self
+in
+self
 
