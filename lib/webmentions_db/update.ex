@@ -44,11 +44,17 @@ defmodule WebmentionsDb.Update do
 
     {:ok, json} = resp.body |> Jason.decode()
 
-    json["children"]
-    |> Enum.map(fn item ->
-      Mention.create_mention(item)
-      item["wm-target"]
-    end)
-    |> Enum.uniq()
+    case json["children"] do
+      nil ->
+        IO.puts("no data")
+
+      e ->
+        e
+        |> Enum.map(fn item ->
+          Mention.create_mention(item)
+          item["wm-target"]
+        end)
+        |> Enum.uniq()
+    end
   end
 end
